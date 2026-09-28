@@ -55,12 +55,12 @@ namespace Boiler.Services
                     this._notificationService.Execute("Pre Prudge Cycle Starts");
                     this.boilerSystem.SystemStatus = SystemStatus.PrePrudge;
                     await Task.Delay(this._prePrudgeTime, this.boilerSystem.CancellationTokenSource.Token);
-                    this._notificationService.Execute($"Pre Prudge Cycle Completed by {this._prePrudgeTime} Seconds");
+                    this._notificationService.Execute($"Pre Prudge Cycle Completed");
                     this._logger.Log(new Log(DateTime.Now, "Information", $"Pre Prudge Cycle Completed by {this._prePrudgeTime} Seconds"));
                     this._notificationService.Execute("Ignition Cycle Starts");
                     this.boilerSystem.SystemStatus = SystemStatus.Ignition;
                     await Task.Delay(this._ignitionTime, this.boilerSystem.CancellationTokenSource.Token);
-                    this._notificationService.Execute($"Ignition Cycle Completed by {this._ignitionTime} Seconds");
+                    this._notificationService.Execute($"Ignition Cycle Completed");
                     this._logger.Log(new Log(DateTime.Now, "Information", $"Ignition Cycle Cycle Completed by {this._ignitionTime} Seconds"));
                     this.boilerSystem.SystemStatus = SystemStatus.Operational;
                     this._notificationService.Execute("Boiler is in operational state");
@@ -91,7 +91,7 @@ namespace Boiler.Services
             }
             else
             {
-                if (this.boilerSystem.SystemStatus == SystemStatus.Ignition || this.boilerSystem.SystemStatus == SystemStatus.PrePrudge)
+                if (this.boilerSystem.SystemStatus == SystemStatus.Ignition || this.boilerSystem.SystemStatus == SystemStatus.PrePrudge || this.boilerSystem.SystemStatus == SystemStatus.Operational)
                 {
                     this.StopBoiler();
                 }

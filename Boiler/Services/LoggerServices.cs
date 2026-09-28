@@ -11,6 +11,8 @@ namespace Boiler.Services
 
         private readonly object _lockObject = new();
 
+        private List<Log> _logs;
+
         private const int LogCount = 10;
 
         /// <summary>
@@ -23,6 +25,11 @@ namespace Boiler.Services
             if (!File.Exists(this._filePath))
             {
                 File.AppendAllTextAsync(this._filePath, $"EventTime , Event , EventData\n");
+                this._logs = new List<Log>();
+            }
+            else
+            {
+                this._logs = this.LoadLogs();
             }
         }
 
@@ -35,14 +42,24 @@ namespace Boiler.Services
             lock (this._lockObject)
             {
                 File.AppendAllTextAsync(this._filePath, $"{log.TimeStamp},{log.Event},{log.EventData}\n");
+                this._logs.Add(log);
             }
         }
 
         /// <summary>
-        /// Fetches the logs from file location
+        /// Fetches the logs
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Last 10 logs </returns>
         public IEnumerable<Log> FetchLog()
+        {
+            return this._logs.TakeLast(LogCount);
+        }
+
+        /// <summary>
+        /// Loads the logs from file location
+        /// </summary>
+        /// <returns> List of logs</returns>
+        public List<Log> LoadLogs()
         {
             IEnumerable<string> text;
             lock (this._lockObject)
@@ -57,7 +74,7 @@ namespace Boiler.Services
                 Log log = new Log(timeStamp, items[1], items[2]);
                 logs.Add(log);
             }
-            return logs.TakeLast(LogCount);
+            return logs;
         }
     }
 }

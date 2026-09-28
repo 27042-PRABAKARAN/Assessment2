@@ -31,7 +31,6 @@ namespace Boiler.View
             BoilerOptions? option = default;
             do
             {
-                ConsolePrinter.ClearMenu();
                 ConsolePrinter.WriteLine(@"===================
 1. Toggle Switch
 2. Start Boiler Sequence.
@@ -85,6 +84,7 @@ namespace Boiler.View
                             break;
                         }
                 }
+                ConsolePrinter.ClearMenu();
 
             }
             while (option != BoilerOptions.Exit);
