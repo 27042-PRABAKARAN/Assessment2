@@ -24,7 +24,11 @@ namespace Boiler.Services
         {
             this.boilerSystem = boilerSystem;
             this._logger = loggerServices;
-            _notificationService = notificationService;
+            this._notificationService = notificationService;
+
+            this._notificationService.Execute("Boiler Control initialized");
+            this._logger.Log(new Log(DateTime.Now, "Information", "Boiler Control initialized"));
+            this.boilerSystem.SystemStatus = SystemStatus.LockOut;
         }
 
         /// <summary>
@@ -50,11 +54,17 @@ namespace Boiler.Services
                     this._notificationService.Execute("Pre Prudge Cycle Starts");
                     this.boilerSystem.SystemStatus = SystemStatus.PrePrudge;
                     await Task.Delay(this._prePrudgeTime, this.boilerSystem.CancellationTokenSource.Token);
+                    this._notificationService.Execute($"Pre Prudge Cycle Completed by {this._prePrudgeTime} Seconds");
+                    this._logger.Log(new Log(DateTime.Now, "Information", $"Pre Prudge Cycle Completed by {this._prePrudgeTime} Seconds"));
                     this._notificationService.Execute("Ignition Cycle Starts");
                     this.boilerSystem.SystemStatus = SystemStatus.Ignition;
                     await Task.Delay(this._ignitionTime, this.boilerSystem.CancellationTokenSource.Token);
-                    this._notificationService.Execute("Boiler is in operational state");
+                    this._notificationService.Execute($"Ignition Cycle Completed by {this._ignitionTime} Seconds");
+                    this._logger.Log(new Log(DateTime.Now, "Information", $"Ignition Cycle Cycle Completed by {this._ignitionTime} Seconds"));
                     this.boilerSystem.SystemStatus = SystemStatus.Operational;
+                    this._notificationService.Execute("Boiler is in operational state");
+                    this._logger.Log(new Log(DateTime.Now, "Information", $"Boiler is in operational state"));
+
                 }
                 catch (OperationCanceledException)
                 {
@@ -155,6 +165,7 @@ namespace Boiler.Services
         /// <returns> Enumerable of Logs</returns>
         public IEnumerable<Log> FetchLog()
         {
+            this._logger.Log(new Log(DateTime.Now, "Information", "Fetching Logs"));
             return this._logger.FetchLog();
         }
     }

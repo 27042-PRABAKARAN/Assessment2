@@ -8,7 +8,7 @@ namespace Boiler.View
     /// </summary>
     internal class ConsoleView
     {
-        private readonly BoilerServices _boilerServices;
+        private readonly IBoilerServices _boilerServices;
         private readonly NotificationServices _notificationServices;
 
         /// <summary>
@@ -16,12 +16,11 @@ namespace Boiler.View
         /// </summary>
         /// <param name="boilerServices"> instance of boiler services </param>
         /// <param name="notificationServices"> instance of notification services</param>
-        public ConsoleView(BoilerServices boilerServices, NotificationServices notificationServices)
+        public ConsoleView(IBoilerServices boilerServices, NotificationServices notificationServices)
         {
             this._notificationServices = notificationServices;
             this._boilerServices = boilerServices;
             this._notificationServices.NotifyEvent += this.NotifyUser;
-            this.NotifyUser("Boiler Control initialized");
         }
 
         /// <summary>

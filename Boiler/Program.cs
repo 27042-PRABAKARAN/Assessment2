@@ -13,7 +13,6 @@ namespace Boiler
         private static void Main()
         {
             LoggerServices loggerServices = new("log.csv");
-            CancellationTokenSource cts = new CancellationTokenSource();
             NotificationServices notificationServices = new NotificationServices();
             BoilerSystem boilerSystem = new(SystemStatus.LockOut, SwitchStatus.Open);
             BoilerServices boilerServices = new(boilerSystem, loggerServices, notificationServices);
