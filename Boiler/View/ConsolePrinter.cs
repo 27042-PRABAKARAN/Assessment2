@@ -12,7 +12,7 @@ namespace Boiler.View
         private const int MaxNotificationRows = 10;
         private static readonly object LockObject = new object();
         private const int LogRow = 15;
-        private const int MaxMenuHeight = 9;
+        private const int MaxMenuHeight = 14;
 
         /// <summary>
         /// write into console
@@ -93,7 +93,7 @@ namespace Boiler.View
             Console.SetCursorPosition(0, 0);
             for (int i = 0; i <= MaxMenuHeight; i++)
             {
-                WriteLine(new string(' ', 30));
+                WriteLine(new string(' ', 50));
             }
             Console.SetCursorPosition(0, 0);
         }

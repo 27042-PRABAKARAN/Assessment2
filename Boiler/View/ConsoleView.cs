@@ -82,6 +82,8 @@ namespace Boiler.View
                     default:
                         {
                             ConsolePrinter.WriteLine("Enter valid Choice");
+                            ConsolePrinter.WriteLine("Enter any key to return to menu");
+                            Console.ReadKey();
                             break;
                         }
                 }
