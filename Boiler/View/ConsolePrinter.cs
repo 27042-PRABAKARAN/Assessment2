@@ -12,12 +12,23 @@ namespace Boiler.View
         private const int MaxNotificationRows = 10;
         private static readonly object LockObject = new object();
         private const int LogRow = 15;
-        private const int MaxMenuHeight = 15;
+        private const int MaxMenuHeight = 9;
 
+        /// <summary>
+        /// write into console
+        /// </summary>
+        /// <param name="message"> the message to be written</param>
+        public static void Write(string message)
+        {
+            lock (LockObject)
+            {
+                Console.Write(message);
+            }
+        }
         /// <summary>
         /// Lock the object and write into console
         /// </summary>
-        /// <param name="message"></param>
+        /// <param name="message">the message to be written</param>
         public static void WriteLine(string message)
         {
             lock (LockObject)

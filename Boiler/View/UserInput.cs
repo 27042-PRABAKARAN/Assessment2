@@ -13,7 +13,7 @@
         public static T? ReadEnum<T>(string prompt)
     where T : struct, Enum
         {
-            Console.Write(prompt);
+            ConsolePrinter.Write(prompt);
 
             if (int.TryParse(Console.ReadLine(), out int number) &&
                 Enum.IsDefined(typeof(T), number))

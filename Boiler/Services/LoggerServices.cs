@@ -11,6 +11,8 @@ namespace Boiler.Services
 
         private readonly object _lockObject = new();
 
+        private const int LogCount = 10;
+
         /// <summary>
         /// to create an instance of LoggerServices
         /// </summary>
@@ -55,7 +57,7 @@ namespace Boiler.Services
                 Log log = new Log(timeStamp, items[1], items[2]);
                 logs.Add(log);
             }
-            return logs.TakeLast(10);
+            return logs.TakeLast(LogCount);
         }
     }
 }
