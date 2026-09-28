@@ -5,9 +5,12 @@ using Boiler.View;
 
 namespace Boiler
 {
+    /// <summary>
+    /// Entry point of Application
+    /// </summary>
     internal class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             LoggerServices loggerServices = new("log.csv");
             CancellationTokenSource cts = new CancellationTokenSource();
@@ -15,7 +18,7 @@ namespace Boiler
             BoilerSystem boilerSystem = new(SystemStatus.LockOut, SwitchStatus.Open);
             BoilerServices boilerServices = new(boilerSystem, loggerServices, notificationServices);
             ConsoleView consoleView = new ConsoleView(boilerServices, notificationServices);
-            consoleView.PrintMenu();
+            consoleView.ExecuteOperations();
         }
     }
 }

@@ -55,7 +55,7 @@ namespace Boiler.Services
                 Log log = new Log(timeStamp, items[1], items[2]);
                 logs.Add(log);
             }
-            return logs;
+            return logs.TakeLast(10);
         }
     }
 }

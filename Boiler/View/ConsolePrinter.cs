@@ -12,8 +12,12 @@ namespace Boiler.View
         private const int MaxNotificationRows = 10;
         private static readonly object LockObject = new object();
         private const int LogRow = 15;
+        private const int MaxMenuHeight = 15;
 
-
+        /// <summary>
+        /// Loack the object and write into console
+        /// </summary>
+        /// <param name="message"></param>
         public static void WriteLine(string message)
         {
             lock (LockObject)
@@ -98,32 +102,14 @@ namespace Boiler.View
         /// Clears the menu
         /// </summary>
         /// <param name="height"></param>
-        public static void ClearMenu(int height)
+        public static void ClearMenu()
         {
             Console.SetCursorPosition(0, 0);
-            for (int i = 0; i <= height; i++)
+            for (int i = 0; i <= MaxMenuHeight; i++)
             {
                 WriteLine(new string(' ', 30));
             }
             Console.SetCursorPosition(0, 0);
-        }
-
-        /// <summary>
-        /// Waits for user input key and clears the log
-        /// </summary>
-        /// <param name="height"> number of logs printed</param>
-        /// <param name="originalLeft"> original cursor position </param>
-        /// <param name="originalTop"> original cursor position </param>
-        public static void WaitAndClearLog(int height, int originalLeft, int originalTop)
-        {
-            WriteLine("Enter Any key to get back to menu");
-            Console.ReadKey();
-            Console.SetCursorPosition(0, LogRow);
-            for (int i = 0; i < LogRow; i++)
-            {
-                WriteLine(new string(' ', Console.WindowWidth));
-            }
-            Console.SetCursorPosition(originalLeft, originalTop);
         }
 
         /// <summary>
@@ -132,14 +118,15 @@ namespace Boiler.View
         /// <param name="logs"> Enumerable of logs to be printed </param>
         public static void PrintTable(IEnumerable<Log> logs)
         {
-            int originalLeft = Console.CursorLeft;
-            int originalTop = Console.CursorTop;
             Console.SetCursorPosition(0, LogRow);
+            WriteLine("Last 10 Logs: ");
             foreach (Log log in logs)
             {
                 WriteLine($"Time : {log.TimeStamp}, Event Name : {log.Event}, Event Details : {log.EventData}");
             }
-            WaitAndClearLog(logs.Count(), originalLeft, originalTop);
+            WriteLine("Enter Any key to get back to menu");
+            Console.ReadKey();
+            Console.Clear();
         }
     }
 }
