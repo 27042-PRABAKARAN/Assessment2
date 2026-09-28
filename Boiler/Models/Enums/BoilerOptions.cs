@@ -4,6 +4,9 @@
     {
         ToggleSwitch = 1,
         StartBoiler,
+        StopBoiler,
+        SimulateError,
+        ResetLock,
         Exit,
     }
 }

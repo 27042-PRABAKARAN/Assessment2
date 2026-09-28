@@ -24,5 +24,19 @@ namespace Boiler.Services
                 File.AppendAllTextAsync(this._filePath, $"{log.TimeStamp},{log.Event},{log.EventData}\n");
             }
         }
+
+        internal IEnumerable<Log> FetchLog()
+        {
+            IEnumerable<string> text = File.ReadLines(this._filePath);
+            List<Log> logs = new List<Log>();
+            foreach (string line in text.Skip(1))
+            {
+                string[] items = line.Split(',');
+                DateTime.TryParse(items[0], out DateTime timeStamp);
+                Log log = new Log(timeStamp, items[1], items[2]);
+                logs.Add(log);
+            }
+            return logs;
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace Boiler.Services
         private readonly NotificationServices _notificationService;
         private readonly TimeSpan _prePrudgeTime = TimeSpan.FromSeconds(10);
         private readonly TimeSpan _ignitionTime = TimeSpan.FromSeconds(10);
+        private BoilerSystem boilerSystem;
 
         public BoilerServices(BoilerSystem boilerSystem, LoggerServices loggerServices, NotificationServices notificationService)
         {
@@ -16,7 +17,6 @@ namespace Boiler.Services
             this._logger = loggerServices;
             _notificationService = notificationService;
         }
-        private BoilerSystem boilerSystem;
 
         public async Task StartSequence()
         {
@@ -46,9 +46,9 @@ namespace Boiler.Services
                 }
                 catch (OperationCanceledException)
                 {
+                    this.boilerSystem.SystemStatus = SystemStatus.LockOut;
                     this._notificationService.Execute("the Boiler is stopped with error");
                     this._logger.Log(new Log(DateTime.Now, "Error", "the Boiler is stopped with error"));
-                    this.boilerSystem.SystemStatus = SystemStatus.LockOut;
                     return;
                 }
             }
@@ -64,11 +64,64 @@ namespace Boiler.Services
             }
             else
             {
+                this.StopBoiler();
                 this.boilerSystem.SwitchStatus = SwitchStatus.Open;
-                this.boilerSystem.CancellationTokenSource?.Cancel();
-                this._notificationService.Execute($"Switch is toggled to {this.boilerSystem.SwitchStatus}");
-                this._logger.Log(new Log(DateTime.Now, "Information", $"The Switch is Toggled to state - {this.boilerSystem.SwitchStatus}"));
+                this.boilerSystem.SystemStatus = SystemStatus.LockOut;
             }
         }
+
+        public void StopBoiler()
+        {
+            if (this.boilerSystem.SwitchStatus == SwitchStatus.Open)
+            {
+                this._notificationService.Execute($"The Boiler is not started");
+                this._logger.Log(new Log(DateTime.Now, "Warning", "Attempted to stop the boiler when it is not yet started"));
+            }
+            else if (this.boilerSystem.SystemStatus == SystemStatus.Ignition || this.boilerSystem.SystemStatus == SystemStatus.PrePrudge)
+            {
+                this.boilerSystem.CancellationTokenSource?.Cancel();
+            }
+            else
+            {
+                this.boilerSystem.SystemStatus = SystemStatus.Ready;
+                this._notificationService.Execute($"The Boiler is Stopped");
+                this._logger.Log(new Log(DateTime.Now, "Information", "The Boiler is Stopped"));
+            }
+        }
+
+        public void SimulateBoilerError()
+        {
+            if (this.boilerSystem.SystemStatus != SystemStatus.Operational)
+            {
+                this._notificationService.Execute($"the System should be in operational state");
+                this._logger.Log(new Log(DateTime.Now, "Warning", "Attempted to stimulate error when the boiler is not in operational state"));
+                return;
+            }
+
+            this._notificationService.Execute("the Boiler is stopped with error");
+            this._logger.Log(new Log(DateTime.Now, "Error", "the Boiler is stopped with error"));
+            this.boilerSystem.SystemStatus = SystemStatus.LockOut;
+        }
+
+        public void ResetLock()
+        {
+            if (this.boilerSystem.SwitchStatus == SwitchStatus.Close)
+            {
+                if ((this.boilerSystem.SystemStatus == SystemStatus.PrePrudge || this.boilerSystem.SystemStatus == SystemStatus.Ignition) && this.boilerSystem.SwitchStatus == SwitchStatus.Close)
+                {
+                    this.boilerSystem.CancellationTokenSource?.Cancel();
+                }
+
+                this.boilerSystem.SystemStatus = SystemStatus.Ready;
+            }
+            this._notificationService.Execute("the Boiler reset is complete");
+            this._logger.Log(new Log(DateTime.Now, "Information", "the Boiler Reset is complete"));
+        }
+
+        public IEnumerable<Log> FetchLog()
+        {
+            return this._logger.FetchLog();
+        }
+
     }
 }

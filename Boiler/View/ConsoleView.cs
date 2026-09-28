@@ -22,6 +22,10 @@ namespace Boiler.View
                 ConsolePrinter.WriteLine(@"===================
 1. Toggle Switch
 2. Start Boiler Sequence.
+3. Stop Boiler Sequence.
+4. Simulate Error.
+5. Reset Lock.
+7. Exit.
 ===================");
                 option = UserInput.ReadEnum<BoilerOptions>("Enter an option: ");
                 switch (option)
@@ -34,6 +38,21 @@ namespace Boiler.View
                     case BoilerOptions.StartBoiler:
                         {
                             Task.Run(() => this._boilerServices.StartSequence());
+                            break;
+                        }
+                    case BoilerOptions.StopBoiler:
+                        {
+                            this._boilerServices.StopBoiler();
+                            break;
+                        }
+                    case BoilerOptions.SimulateError:
+                        {
+                            this._boilerServices.SimulateBoilerError();
+                            break;
+                        }
+                    case BoilerOptions.ResetLock:
+                        {
+                            this._boilerServices.ResetLock();
                             break;
                         }
                 }
