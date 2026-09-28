@@ -3,7 +3,7 @@
 namespace Boiler.View
 {
     /// <summary>
-    /// Display class is used for displaying output
+    /// Printing class is used for displaying output
     /// </summary>
     internal static class ConsolePrinter
     {
@@ -15,7 +15,7 @@ namespace Boiler.View
         private const int MaxMenuHeight = 15;
 
         /// <summary>
-        /// Loack the object and write into console
+        /// Lock the object and write into console
         /// </summary>
         /// <param name="message"></param>
         public static void WriteLine(string message)
@@ -23,31 +23,6 @@ namespace Boiler.View
             lock (LockObject)
             {
                 Console.WriteLine(message);
-            }
-        }
-
-        /// <summary>
-        /// to print the message in red
-        /// </summary>
-        /// <param name="message">the message that has to be printed in red</param>
-        public static void Error(string message)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            WriteLine(message);
-            Console.ResetColor();
-        }
-
-        /// <summary>
-        /// to print the message in Green
-        /// </summary>
-        /// <param name="message">the message that has to be printed in Green</param>
-        public static void Success(string message)
-        {
-            lock (LockObject)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                WriteLine(message);
-                Console.ResetColor();
             }
         }
 

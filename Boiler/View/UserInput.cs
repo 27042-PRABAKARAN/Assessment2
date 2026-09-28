@@ -1,5 +1,8 @@
 ﻿namespace Boiler.View
 {
+    /// <summary>
+    /// Gets the input from user
+    /// </summary>
     internal class UserInput
     {
         /// <summary>
