@@ -7,6 +7,7 @@
         StopBoiler,
         SimulateError,
         ResetLock,
+        FetchLog,
         Exit,
     }
 }
