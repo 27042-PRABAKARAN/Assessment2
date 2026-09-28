@@ -1,6 +1,6 @@
 ﻿namespace Boiler.Services
 {
-    internal class NotificationServices
+    internal class NotificationServices : INotificationService
     {
         /// <summary>
         /// Signature of the method group to be subscribed

@@ -5,7 +5,7 @@ namespace Boiler.Services
     /// <summary>
     /// Provides Logging Services
     /// </summary>
-    internal class LoggerServices
+    internal class LoggerServices : ILoggerServices
     {
         private readonly string _filePath;
 
@@ -28,7 +28,7 @@ namespace Boiler.Services
         /// Logs the file in file location
         /// </summary>
         /// <param name="log"> object to be logged</param>
-        internal void Log(Log log)
+        public void Log(Log log)
         {
             lock (this._lockObject)
             {
@@ -40,7 +40,7 @@ namespace Boiler.Services
         /// Fetches the logs from file location
         /// </summary>
         /// <returns></returns>
-        internal IEnumerable<Log> FetchLog()
+        public IEnumerable<Log> FetchLog()
         {
             IEnumerable<string> text;
             lock (this._lockObject)

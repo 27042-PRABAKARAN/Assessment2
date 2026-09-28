@@ -6,9 +6,9 @@ namespace Boiler.Services
     /// <summary>
     /// Demonstrates the Services provided by the Boiler
     /// </summary>
-    internal class BoilerServices
+    internal class BoilerServices : IBoilerServices
     {
-        private readonly LoggerServices _logger;
+        private readonly ILoggerServices _logger;
         private readonly NotificationServices _notificationService;
         private readonly TimeSpan _prePrudgeTime = TimeSpan.FromSeconds(10);
         private readonly TimeSpan _ignitionTime = TimeSpan.FromSeconds(10);
@@ -20,7 +20,7 @@ namespace Boiler.Services
         /// <param name="boilerSystem"> To access the instance of boilerSystem</param>
         /// <param name="loggerServices"> To access the instance of logger Services</param>
         /// <param name="notificationService"> To access the instance of notification Services</param>
-        public BoilerServices(BoilerSystem boilerSystem, LoggerServices loggerServices, NotificationServices notificationService)
+        public BoilerServices(BoilerSystem boilerSystem, ILoggerServices loggerServices, NotificationServices notificationService)
         {
             this.boilerSystem = boilerSystem;
             this._logger = loggerServices;
