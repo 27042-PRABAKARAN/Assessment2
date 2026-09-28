@@ -25,8 +25,6 @@ namespace Boiler.Services
             this.boilerSystem = boilerSystem;
             this._logger = loggerServices;
             this._notificationService = notificationService;
-
-            this._notificationService.Execute("Boiler Control initialized");
             this._logger.Log(new Log(DateTime.Now, "Information", "Boiler Control initialized"));
             this.boilerSystem.SystemStatus = SystemStatus.LockOut;
             this.boilerSystem.InterLockSwitch = SwitchStatus.Open;

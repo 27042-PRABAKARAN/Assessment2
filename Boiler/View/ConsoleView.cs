@@ -21,6 +21,7 @@ namespace Boiler.View
             this._notificationServices = notificationServices;
             this._boilerServices = boilerServices;
             this._notificationServices.NotifyEvent += this.NotifyUser;
+            this._notificationServices.Execute("Boiler Control initialized");
         }
 
         /// <summary>
