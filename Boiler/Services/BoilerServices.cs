@@ -3,6 +3,9 @@ using Boiler.Models.Enums;
 
 namespace Boiler.Services
 {
+    /// <summary>
+    /// Demonstrates the Services provided by the Boiler
+    /// </summary>
     internal class BoilerServices
     {
         private readonly LoggerServices _logger;
@@ -11,6 +14,12 @@ namespace Boiler.Services
         private readonly TimeSpan _ignitionTime = TimeSpan.FromSeconds(10);
         private BoilerSystem boilerSystem;
 
+        /// <summary>
+        /// To create an instance of Boiler Services
+        /// </summary>
+        /// <param name="boilerSystem"> To access the instance of boilerSystem</param>
+        /// <param name="loggerServices"> To access the instance of logger Services</param>
+        /// <param name="notificationService"> To access the instance of notification Services</param>
         public BoilerServices(BoilerSystem boilerSystem, LoggerServices loggerServices, NotificationServices notificationService)
         {
             this.boilerSystem = boilerSystem;
@@ -18,10 +27,13 @@ namespace Boiler.Services
             _notificationService = notificationService;
         }
 
-        public async Task StartSequence()
+        /// <summary>
+        /// Starts the Boiler Sequence
+        /// </summary>
+        public async Task StartBoiler()
         {
             this.boilerSystem.CancellationTokenSource = new CancellationTokenSource();
-            if (this.boilerSystem.SwitchStatus == SwitchStatus.Open)
+            if (this.boilerSystem.InterLockSwitch == SwitchStatus.Open)
             {
                 this._notificationService.Execute("Close the Switch to Start the Boiler");
                 this._logger.Log(new Log(DateTime.Now, "Warning", "Close the Switch to Start the Boiler"));
@@ -54,14 +66,17 @@ namespace Boiler.Services
             }
         }
 
+        /// <summary>
+        /// Toggles the state of the switch.
+        /// </summary>
         public void ToggleSwitch()
         {
-            if (this.boilerSystem.SwitchStatus == SwitchStatus.Open)
+            if (this.boilerSystem.InterLockSwitch == SwitchStatus.Open)
             {
-                this.boilerSystem.SwitchStatus = SwitchStatus.Close;
+                this.boilerSystem.InterLockSwitch = SwitchStatus.Close;
                 this.boilerSystem.SystemStatus = SystemStatus.Ready;
-                this._notificationService.Execute($"Switch is toggled to {this.boilerSystem.SwitchStatus}");
-                this._logger.Log(new Log(DateTime.Now, "Information", $"The Switch is Toggled to state - {this.boilerSystem.SwitchStatus}"));
+                this._notificationService.Execute($"Switch is toggled to {this.boilerSystem.InterLockSwitch}");
+                this._logger.Log(new Log(DateTime.Now, "Information", $"The Switch is Toggled to state - {this.boilerSystem.InterLockSwitch}"));
             }
             else
             {
@@ -70,16 +85,19 @@ namespace Boiler.Services
                     this.StopBoiler();
                 }
                 this.boilerSystem.SystemStatus = SystemStatus.LockOut;
-                this.boilerSystem.SwitchStatus = SwitchStatus.Open;
-                this._notificationService.Execute($"Switch is toggled to {this.boilerSystem.SwitchStatus}");
-                this._logger.Log(new Log(DateTime.Now, "Information", $"The Switch is Toggled to state - {this.boilerSystem.SwitchStatus}"));
+                this.boilerSystem.InterLockSwitch = SwitchStatus.Open;
+                this._notificationService.Execute($"Switch is toggled to {this.boilerSystem.InterLockSwitch}");
+                this._logger.Log(new Log(DateTime.Now, "Information", $"The Switch is Toggled to state - {this.boilerSystem.InterLockSwitch}"));
 
             }
         }
 
+        /// <summary>
+        /// Stops the Boiler
+        /// </summary>
         public void StopBoiler()
         {
-            if (this.boilerSystem.SwitchStatus == SwitchStatus.Open)
+            if (this.boilerSystem.InterLockSwitch == SwitchStatus.Open)
             {
                 this._notificationService.Execute($"The Boiler is not started");
                 this._logger.Log(new Log(DateTime.Now, "Warning", "Attempted to stop the boiler when it is not yet started"));
@@ -96,6 +114,9 @@ namespace Boiler.Services
             }
         }
 
+        /// <summary>
+        /// Simulates a boiler error only if boiler is in operational state
+        /// </summary>
         public void SimulateBoilerError()
         {
             if (this.boilerSystem.SystemStatus != SystemStatus.Operational)
@@ -110,11 +131,14 @@ namespace Boiler.Services
             this.boilerSystem.SystemStatus = SystemStatus.LockOut;
         }
 
+        /// <summary>
+        /// Resets the Inter Lock switch and system status
+        /// </summary>
         public void ResetLock()
         {
-            if (this.boilerSystem.SwitchStatus == SwitchStatus.Close)
+            if (this.boilerSystem.InterLockSwitch == SwitchStatus.Close)
             {
-                if ((this.boilerSystem.SystemStatus == SystemStatus.PrePrudge || this.boilerSystem.SystemStatus == SystemStatus.Ignition) && this.boilerSystem.SwitchStatus == SwitchStatus.Close)
+                if ((this.boilerSystem.SystemStatus == SystemStatus.PrePrudge || this.boilerSystem.SystemStatus == SystemStatus.Ignition) && this.boilerSystem.InterLockSwitch == SwitchStatus.Close)
                 {
                     this.boilerSystem.CancellationTokenSource?.Cancel();
                 }
@@ -125,6 +149,10 @@ namespace Boiler.Services
             this._logger.Log(new Log(DateTime.Now, "Information", "the Boiler Reset is complete"));
         }
 
+        /// <summary>
+        /// fetches log from logger
+        /// </summary>
+        /// <returns> Enumerable of Logs</returns>
         public IEnumerable<Log> FetchLog()
         {
             return this._logger.FetchLog();

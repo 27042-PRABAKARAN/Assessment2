@@ -14,7 +14,7 @@ namespace Boiler.View
             this._notificationServices.NotifyEvent += this.NotifyUser;
         }
 
-        public void Menu()
+        public void PrintMenu()
         {
             BoilerOptions? option = default;
             do
@@ -38,7 +38,7 @@ namespace Boiler.View
                         }
                     case BoilerOptions.StartBoiler:
                         {
-                            Task.Run(() => this._boilerServices.StartSequence());
+                            Task.Run(() => this._boilerServices.StartBoiler());
                             break;
                         }
                     case BoilerOptions.StopBoiler:
@@ -56,12 +56,23 @@ namespace Boiler.View
                             this._boilerServices.ResetLock();
                             break;
                         }
-                    case BoilerOptions.FetchLog:
+                    case BoilerOptions.DisplayLog:
                         {
                             this.FetchLog();
                             break;
                         }
+                    case BoilerOptions.Exit:
+                        {
+                            this._boilerServices.StopBoiler();
+                            break;
+                        }
+                    default:
+                        {
+                            ConsolePrinter.WriteLine("Enter valid Choice");
+                            break;
+                        }
                 }
+                ConsolePrinter.ClearMenu(9);
             }
             while (option != BoilerOptions.Exit);
         }
@@ -71,7 +82,7 @@ namespace Boiler.View
         }
         public void NotifyUser(string message)
         {
-            ConsolePrinter.WriteLine(message);
+            ConsolePrinter.Notification(message);
         }
     }
 }

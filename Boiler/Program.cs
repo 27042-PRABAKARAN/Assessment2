@@ -15,7 +15,7 @@ namespace Boiler
             BoilerSystem boilerSystem = new(SystemStatus.LockOut, SwitchStatus.Open);
             BoilerServices boilerServices = new(boilerSystem, loggerServices, notificationServices);
             ConsoleView consoleView = new ConsoleView(boilerServices, notificationServices);
-            consoleView.Menu();
+            consoleView.PrintMenu();
         }
     }
 }
