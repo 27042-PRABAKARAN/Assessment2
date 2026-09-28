@@ -34,10 +34,10 @@ namespace Boiler.View
             {
                 ConsolePrinter.WriteLine(@"===================
 1. Toggle Switch
-2. Start Boiler Sequence.
-3. Stop Boiler Sequence.
-4. Simulate Error.
-5. Reset Lock.
+2. Reset Lock.
+3. Start Boiler Sequence.
+4. Stop Boiler Sequence.
+5. Simulate Error.
 6. View Logs.
 7. Exit.
 ===================");

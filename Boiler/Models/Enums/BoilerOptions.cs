@@ -11,6 +11,11 @@
         ToggleSwitch = 1,
 
         /// <summary>
+        /// To reset the lock
+        /// </summary>
+        ResetLock,
+
+        /// <summary>
         /// To Start the Boiler
         /// </summary>
         StartBoiler,
@@ -24,11 +29,6 @@
         /// To Stimulate Error
         /// </summary>
         SimulateError,
-
-        /// <summary>
-        /// To reset the lock
-        /// </summary>
-        ResetLock,
 
         /// <summary>
         /// To Display the Log

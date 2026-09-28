@@ -41,6 +41,11 @@ namespace Boiler.Services
                 this._notificationService.Execute("Close the Switch to Start the Boiler");
                 this._logger.Log(new Log(DateTime.Now, "Warning", "Close the Switch to Start the Boiler"));
             }
+            else if (this.boilerSystem.SystemStatus == SystemStatus.LockOut)
+            {
+                this._notificationService.Execute("Reset the Switch to Start the Boiler");
+                this._logger.Log(new Log(DateTime.Now, "Warning", "reset the Switch to Start the Boiler"));
+            }
             else if (this.boilerSystem.SystemStatus != SystemStatus.LockOut && this.boilerSystem.SystemStatus != SystemStatus.Ready)
             {
                 this._notificationService.Execute("The Boiler is Already Started");
@@ -70,7 +75,6 @@ namespace Boiler.Services
                     this.boilerSystem.SystemStatus = SystemStatus.LockOut;
                     this._notificationService.Execute("the Boiler is stopped with error");
                     this._logger.Log(new Log(DateTime.Now, "Error", "the Boiler is stopped with error"));
-                    return;
                 }
             }
         }
@@ -83,7 +87,6 @@ namespace Boiler.Services
             if (this.boilerSystem.InterLockSwitch == SwitchStatus.Open)
             {
                 this.boilerSystem.InterLockSwitch = SwitchStatus.Close;
-                this.boilerSystem.SystemStatus = SystemStatus.Ready;
                 this._notificationService.Execute($"Switch is toggled to {this.boilerSystem.InterLockSwitch}");
                 this._logger.Log(new Log(DateTime.Now, "Information", $"The Switch is Toggled to state - {this.boilerSystem.InterLockSwitch}"));
             }
@@ -153,9 +156,14 @@ namespace Boiler.Services
                 }
 
                 this.boilerSystem.SystemStatus = SystemStatus.Ready;
+                this._notificationService.Execute("the Boiler reset is complete");
+                this._logger.Log(new Log(DateTime.Now, "Information", "the Boiler Reset is complete"));
             }
-            this._notificationService.Execute("the Boiler reset is complete");
-            this._logger.Log(new Log(DateTime.Now, "Information", "the Boiler Reset is complete"));
+            else
+            {
+                this._notificationService.Execute("Close the Switch to Reset the switch");
+                this._logger.Log(new Log(DateTime.Now, "Warning", "Close the Switch to Reset the switch"));
+            }
         }
 
         /// <summary>
