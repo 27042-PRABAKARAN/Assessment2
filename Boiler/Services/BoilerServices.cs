@@ -59,14 +59,21 @@ namespace Boiler.Services
             if (this.boilerSystem.SwitchStatus == SwitchStatus.Open)
             {
                 this.boilerSystem.SwitchStatus = SwitchStatus.Close;
+                this.boilerSystem.SystemStatus = SystemStatus.Ready;
                 this._notificationService.Execute($"Switch is toggled to {this.boilerSystem.SwitchStatus}");
                 this._logger.Log(new Log(DateTime.Now, "Information", $"The Switch is Toggled to state - {this.boilerSystem.SwitchStatus}"));
             }
             else
             {
-                this.StopBoiler();
-                this.boilerSystem.SwitchStatus = SwitchStatus.Open;
+                if (this.boilerSystem.SystemStatus == SystemStatus.Ignition || this.boilerSystem.SystemStatus == SystemStatus.PrePrudge)
+                {
+                    this.StopBoiler();
+                }
                 this.boilerSystem.SystemStatus = SystemStatus.LockOut;
+                this.boilerSystem.SwitchStatus = SwitchStatus.Open;
+                this._notificationService.Execute($"Switch is toggled to {this.boilerSystem.SwitchStatus}");
+                this._logger.Log(new Log(DateTime.Now, "Information", $"The Switch is Toggled to state - {this.boilerSystem.SwitchStatus}"));
+
             }
         }
 
@@ -122,6 +129,5 @@ namespace Boiler.Services
         {
             return this._logger.FetchLog();
         }
-
     }
 }

@@ -25,6 +25,7 @@ namespace Boiler.View
 3. Stop Boiler Sequence.
 4. Simulate Error.
 5. Reset Lock.
+6. View Logs.
 7. Exit.
 ===================");
                 option = UserInput.ReadEnum<BoilerOptions>("Enter an option: ");
@@ -55,11 +56,19 @@ namespace Boiler.View
                             this._boilerServices.ResetLock();
                             break;
                         }
+                    case BoilerOptions.FetchLog:
+                        {
+                            this.FetchLog();
+                            break;
+                        }
                 }
             }
             while (option != BoilerOptions.Exit);
         }
-
+        public void FetchLog()
+        {
+            ConsolePrinter.PrintTable(this._boilerServices.FetchLog());
+        }
         public void NotifyUser(string message)
         {
             ConsolePrinter.WriteLine(message);
